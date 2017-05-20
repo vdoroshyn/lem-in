@@ -43,6 +43,7 @@ typedef struct		s_ways
 	t_route			*head;
 	t_route			*tale;
 	int				size;
+	int				num;
 	struct s_ways	*prev;
 	struct s_ways	*next;
 }					t_way;

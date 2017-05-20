@@ -808,12 +808,54 @@ void	finding_path(t_a *abyss)
 	}
 	for (int i = 0; i < abyss->node_count; i++)
 	{
-		printf("|%d|", abyss->arr[i]);
+		printf("|%d|", abyss->arr[i]);//TODO
 	}
-	printf("\n");
+	printf("\n");//TODO
 	abyss->arr[0] = 1;
 	backtracking(abyss, 0, &size);
 	free_temp_node(abyss);
+}
+
+void	sorting_routes(t_a *abyss)
+{
+	t_way temp;
+	t_way *inner;
+	int i;
+	int flag;
+
+	i = 0;
+	while (i < abyss->node_count - 1)
+	{
+		inner = abyss->routes;
+		while (inner != NULL && inner->next != NULL)
+		{
+			flag = 0;
+			if (inner->size > inner->next->size)
+			{
+				if (inner->prev == NULL)
+				{
+					abyss->routes = inner->next;
+				}
+				//temp.prev = inner->next->prev;
+				temp.next = inner->next->next;
+
+				inner->next->next = inner->next->prev;
+				inner->next->prev = inner->prev;
+				if (inner->prev != NULL)
+				{
+					inner->prev->next = inner->next;
+				}
+				inner->prev = inner->next;
+				inner->next = temp.next;
+				flag = 1;
+			}
+			if (flag == 0)
+			{
+				inner = inner->next;
+			}
+		}
+		i++;
+	}
 }
 
 int		main(void)
@@ -880,8 +922,26 @@ int		main(void)
 		write(1, "ERROR\n", 6);
 		exit(-4);
 	}
+	//sorting_routes(&abyss);
+
+
 	t_way *lal = abyss.routes;
 	t_route *huy;
+	while (lal != NULL)
+	{
+		huy = lal->head;
+		while (huy != NULL)
+		{
+			printf("|%d| - ", huy->room_index);
+			huy = huy->next;
+		}
+		printf("\n");
+		lal = lal->next;
+	}
+	printf("\n");
+	sorting_routes(&abyss);
+
+	lal = abyss.routes;
 	while (lal != NULL)
 	{
 		huy = lal->head;
