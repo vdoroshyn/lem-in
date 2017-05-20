@@ -816,29 +816,47 @@ void	finding_path(t_a *abyss)
 	free_temp_node(abyss);
 }
 
-void	sorting_routes(t_a *abyss)
+void	number_nodes(t_a *abyss)
 {
-	t_way temp;
-	t_way *inner;
+	t_way *tmp;
 	int i;
-	int flag;
 
 	i = 0;
-	while (i < abyss->node_count - 1)
+	tmp = abyss->routes;
+	while (tmp != NULL)
 	{
+		tmp->num = i;
+		i++;
+		tmp = tmp->next;
+	}
+}
+
+void	sorting_routes(t_a *abyss)
+{
+	t_way *temp;
+	t_way *inner;
+	int flag;
+	int swap;
+
+	while (1)
+	{
+		swap = 0;
 		inner = abyss->routes;
 		while (inner != NULL && inner->next != NULL)
 		{
 			flag = 0;
 			if (inner->size > inner->next->size)
 			{
+				swap += 1;
 				if (inner->prev == NULL)
 				{
 					abyss->routes = inner->next;
 				}
-				//temp.prev = inner->next->prev;
-				temp.next = inner->next->next;
-
+				if (inner->next->next != NULL)
+				{
+					inner->next->next->prev = inner;
+				}
+				temp = inner->next->next;
 				inner->next->next = inner->next->prev;
 				inner->next->prev = inner->prev;
 				if (inner->prev != NULL)
@@ -846,7 +864,7 @@ void	sorting_routes(t_a *abyss)
 					inner->prev->next = inner->next;
 				}
 				inner->prev = inner->next;
-				inner->next = temp.next;
+				inner->next = temp;
 				flag = 1;
 			}
 			if (flag == 0)
@@ -854,8 +872,12 @@ void	sorting_routes(t_a *abyss)
 				inner = inner->next;
 			}
 		}
-		i++;
+		if (swap == 0)
+		{
+			break ;
+		}
 	}
+	number_nodes(abyss);
 }
 
 int		main(void)
