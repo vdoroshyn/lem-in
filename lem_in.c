@@ -34,10 +34,10 @@ void	c_destruct(t_a *abyss)
 	{
 		free_end_start(&abyss->start);
 	}
-	if (abyss->arr != NULL)
+	if (abyss->visit != NULL)
 	{
-		free(abyss->arr);
-		abyss->arr = NULL;
+		free(abyss->visit);
+		abyss->visit = NULL;
 	}
 	if (abyss->test_route != NULL)
 	{
@@ -672,7 +672,7 @@ void	add_to_temp_list(t_a *abyss, int index)
 	node = create_temp_node(index);
 	if (node == NULL)
 	{
-		//freeshit (arr, matrix, names, temp_routes)
+		//freeshit (visit, matrix, names, temp_routes)
 		exit(-5);
 	}
 	node->next = abyss->test_route;
@@ -722,7 +722,7 @@ void	new_route_emerges(t_a *abyss, int size)
 		tmp1 = new_room();
 		if (tmp1 == NULL)
 		{
-			//freeshit (arr, matrix, names, temp_routes, routes, rooms)
+			//freeshit (visit, matrix, names, temp_routes, routes, rooms)
 			exit(-5);
 		}
 		if (abyss->routes->head == NULL)
@@ -750,7 +750,7 @@ void	create_a_route(t_a *abyss, int size)
 	node = create_way_node(size);
 	if (node == NULL)
 	{
-		//freeshit (arr, matrix, names, temp_routes, routes)
+		//freeshit (visit, matrix, names, temp_routes, routes)
 		exit(-5);
 	}
 	if (abyss->routes == NULL)
@@ -781,13 +781,13 @@ int		backtracking(t_a *abyss, int index, int *size)
 	i = 0;
 	while (i < abyss->node_count)
 	{	
-		if (abyss->matrix[index][i] == 1 && abyss->arr[i] == 0)
+		if (abyss->matrix[index][i] == 1 && abyss->visit[i] == 0)
 		{
 			//printf("%d\n", abyss->matrix[index][i]);
-			abyss->arr[i] = 1;
+			abyss->visit[i] = 1;
 			backtracking(abyss, i, size);
 			free_temp_node(abyss);
-			abyss->arr[i] = 0;
+			abyss->visit[i] = 0;
 			*size -= 1;
 		}
 		i++;
@@ -800,20 +800,26 @@ void	finding_path(t_a *abyss)
 	int size;
 
 	size = 0;
-	abyss->arr = ft_intnew(abyss->node_count);
-	if (abyss->arr == NULL)
+	abyss->visit = ft_intnew(abyss->node_count);
+	if (abyss->visit == NULL)
 	{
 		c_destruct(abyss);
 		exit(-5);
 	}
 	for (int i = 0; i < abyss->node_count; i++)
 	{
-		printf("|%d|", abyss->arr[i]);//TODO
+		printf("|%d|", abyss->visit[i]);//TODO
 	}
 	printf("\n");//TODO
-	abyss->arr[0] = 1;
+	abyss->visit[0] = 1;
 	backtracking(abyss, 0, &size);
+	abyss->visit[0] = 0;
 	free_temp_node(abyss);
+	for (int i = 0; i < abyss->node_count; i++)
+	{
+		printf("|%d|", abyss->visit[i]);//TODO
+	}
+	printf("\n");//TODO
 }
 
 void	number_nodes(t_a *abyss)
@@ -825,7 +831,7 @@ void	number_nodes(t_a *abyss)
 	tmp = abyss->routes;
 	while (tmp != NULL)
 	{
-		tmp->num = i;
+		tmp->num = i; 
 		i++;
 		tmp = tmp->next;
 	}
@@ -880,6 +886,11 @@ void	sorting_routes(t_a *abyss)
 	number_nodes(abyss);
 }
 
+// void	set_search(t_a *abyss)
+// {
+
+// }
+
 int		main(void)
 {
 	char *line;
@@ -894,7 +905,7 @@ int		main(void)
 	abyss.flag = 0;
 	abyss.routes = NULL;
 	abyss.test_route = NULL;
-	abyss.arr = NULL;
+	abyss.visit = NULL;
 	ft_read_ants(&line, &abyss);
 	if (!(abyss.flag = ft_read_rooms(&line, &abyss)))
 	{
@@ -944,7 +955,6 @@ int		main(void)
 		write(1, "ERROR\n", 6);
 		exit(-4);
 	}
-	//sorting_routes(&abyss);
 
 
 	t_way *lal = abyss.routes;
@@ -975,6 +985,8 @@ int		main(void)
 		printf("\n");
 		lal = lal->next;
 	}
+
+	//set_search(&abyss);
 
 	c_destruct(&abyss);
 	return (0);

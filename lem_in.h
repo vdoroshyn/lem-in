@@ -56,7 +56,7 @@ typedef struct		s_ants
 	int flag;
 	int **matrix;
 	char **names;
-	int *arr;
+	int *visit;
 	t_way *routes;
 	t_temp *test_route;
 	t_lst *head;
