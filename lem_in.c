@@ -886,10 +886,117 @@ void	sorting_routes(t_a *abyss)
 	number_nodes(abyss);
 }
 
-// void	set_search(t_a *abyss)
-// {
+int		ft_isunique(t_route *tmp, t_a *abyss)
+{
+	while (tmp != NULL)
+	{
+		if (tmp->room_index != 0 && tmp->room_index != abyss->node_count - 1)
+		{
+			if (abyss->visit[tmp->room_index] == 1)
+			{
+				return (0);
+			}
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}
 
-// }
+void	rooms_to_visit(t_route *tmp, t_a *abyss)
+{
+	while (tmp != NULL)
+	{
+		if (tmp->room_index != 0 && tmp->room_index != abyss->node_count - 1)
+		{
+			abyss->visit[tmp->room_index] = 1;
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	route_to_tempset(int num, t_a *abyss)
+{
+	t_temp *node;
+
+	node = create_temp_node(num);
+	if (node == NULL)
+	{
+		//freeshit (visit, matrix, names, temp_routes)
+		exit(-6);
+	}
+	node->next = abyss->test_route;
+	abyss->test_route = node;
+}
+
+void	visit_to_zero(int *ptr, int size)
+{
+	int i;
+
+	i = 0;
+	while (i < size)
+	{
+		ptr[i] = 0;
+		i++;
+	}
+}
+
+void	set_search(t_way *head, t_a *abyss)
+{
+	t_way *tmp;
+	int num;
+	float res;
+
+	while (head != NULL)
+	{	
+		abyss->len = 0;
+		num = 0;
+		tmp = head;
+		while (tmp != NULL)
+		{
+			if (ft_isunique(tmp->head, abyss))
+			{
+				rooms_to_visit(tmp->head, abyss);
+				route_to_tempset(tmp->num, abyss);
+				num += tmp->size - 1;
+				abyss->len += 1;
+			}
+			tmp = tmp->next;
+		}
+		res = (float)(abyss->ants + num) / (float)abyss->len;
+		if (abyss->priority == 0 || res < abyss->priority)
+		{
+			abyss->priority = res;
+			//if not null free best
+			abyss->best = tmp;
+			tmp = NULL;
+		}
+		else
+		{
+			//free tmp
+			tmp = NULL;
+		}
+
+		for (int i = 0; i < abyss->node_count; i++)
+		{
+			printf("|%d|", abyss->visit[i]);//TODO
+		}
+		printf("\n");//TODO
+
+		visit_to_zero(abyss->visit, abyss->node_count);
+
+		for (int i = 0; i < abyss->node_count; i++)
+		{
+			printf("|%d|", abyss->visit[i]);//TODO
+		}
+		printf("\n");//TODO
+
+		// printf("l%d\n", abyss->len);
+		// printf("n%d\n", num);
+		// printf("r%f\n", res);
+		printf("abyss%f\n", abyss->priority);
+		head = head->next;
+	}
+}
 
 int		main(void)
 {
@@ -906,6 +1013,8 @@ int		main(void)
 	abyss.routes = NULL;
 	abyss.test_route = NULL;
 	abyss.visit = NULL;
+	abyss.best = NULL;
+	abyss.priority = 0;
 	ft_read_ants(&line, &abyss);
 	if (!(abyss.flag = ft_read_rooms(&line, &abyss)))
 	{
@@ -986,7 +1095,7 @@ int		main(void)
 		lal = lal->next;
 	}
 
-	//set_search(&abyss);
+	set_search(abyss.routes, &abyss);
 
 	c_destruct(&abyss);
 	return (0);

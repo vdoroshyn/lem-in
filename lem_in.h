@@ -54,11 +54,13 @@ typedef struct		s_ants
 	int len;
 	int node_count;
 	int flag;
+	float priority;
 	int **matrix;
 	char **names;
 	int *visit;
 	t_way *routes;
 	t_temp *test_route;
+	t_temp *best;
 	t_lst *head;
 	t_lst *start;
 	t_lst *end;
