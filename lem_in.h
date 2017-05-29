@@ -41,7 +41,7 @@ typedef struct		s_route
 typedef struct		s_ways
 {
 	t_route			*head;
-	t_route			*tale;
+	t_route			*tail;
 	int				size;
 	int				num;
 	struct s_ways	*prev;
@@ -76,6 +76,8 @@ int		vd_strlen(const char *s);
 void	ft_read_ants(char **line, t_a *abyss);
 
 //destruct
+void	destroy_outer(t_a *abyss);
+void	free_best(t_a *abyss);
 void	free_list(t_a *abyss);
 void	free_end_start(t_lst **head);
 void	free_temp_list(t_a *abyss);

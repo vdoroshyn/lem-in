@@ -43,6 +43,14 @@ void	c_destruct(t_a *abyss)
 	{
 		free_temp_list(abyss);
 	}
+	if (abyss->best != NULL)
+	{
+		free_best(abyss);
+	}
+	if (abyss->routes != NULL)
+	{
+		destroy_outer(abyss);
+	}
 }
 
 int		ft_coords_atoi(const char *str)
@@ -692,7 +700,7 @@ t_way	*create_way_node(int size)
 	node->prev = NULL;
 	node->next = NULL;
 	node->head = NULL;
-	node->tale = NULL;
+	node->tail = NULL;
 	return (node);
 }
 
@@ -728,7 +736,7 @@ void	new_route_emerges(t_a *abyss, int size)
 		if (abyss->routes->head == NULL)
 		{
 			tmp1->room_index = tmp2->room_index;
-			abyss->routes->tale = tmp1;
+			abyss->routes->tail = tmp1;
 			abyss->routes->head = tmp1;
 		}
 		else
@@ -914,6 +922,19 @@ void	rooms_to_visit(t_route *tmp, t_a *abyss)
 	}
 }
 
+void	free_best(t_a *abyss)
+{
+	t_temp *tmp;
+
+	while (abyss->best != NULL)
+	{
+		tmp = abyss->best;
+		abyss->best = abyss->best->next;
+		free(tmp);
+	}
+	abyss->best = NULL;
+}
+
 void	route_to_tempset(int num, t_a *abyss)
 {
 	t_temp *node;
@@ -921,7 +942,7 @@ void	route_to_tempset(int num, t_a *abyss)
 	node = create_temp_node(num);
 	if (node == NULL)
 	{
-		//freeshit (visit, matrix, names, temp_routes)
+		c_destruct(abyss);
 		exit(-6);
 	}
 	node->next = abyss->test_route;
@@ -966,14 +987,16 @@ void	set_search(t_way *head, t_a *abyss)
 		if (abyss->priority == 0 || res < abyss->priority)
 		{
 			abyss->priority = res;
-			//if not null free best
-			abyss->best = tmp;
-			tmp = NULL;
+			if (abyss->best != NULL)
+			{
+				free_best(abyss);
+			}
+			abyss->best = abyss->test_route;
+			abyss->test_route = NULL;
 		}
 		else
 		{
-			//free tmp
-			tmp = NULL;
+			free_temp_list(abyss); 
 		}
 
 		for (int i = 0; i < abyss->node_count; i++)
@@ -995,6 +1018,101 @@ void	set_search(t_way *head, t_a *abyss)
 		// printf("r%f\n", res);
 		printf("abyss%f\n", abyss->priority);
 		head = head->next;
+	}
+	t_temp *huy = abyss->best;//TODO
+	while (huy != NULL)
+	{
+		printf("%d ", huy->room_index);
+		huy = huy->next;
+	}
+	printf("\n");//TODO
+}
+
+void	free_inner(t_route *head)
+{	
+	t_route *tmp;
+
+	while (head != NULL)
+	{
+		tmp = head;
+		free(tmp);
+		head = head->next;
+	}
+}
+
+void	free_outer(t_way *head, t_a *abyss)
+{
+	t_way *tmp;
+
+	tmp = head;
+	if (head->prev == NULL)
+	{
+		abyss->routes = head->next;
+		if (head->next != NULL)
+		{
+			head->next->prev = NULL;
+		}
+	}
+	else
+	{
+		head->prev->next = head->next;
+		if (head->next != NULL)
+		{
+			head->next->prev = head->prev;
+		}
+	}
+	free(tmp);
+}
+
+void	destroy_outer(t_a *abyss)
+{
+	t_way *tmp;
+	t_way *tmp1;
+
+	tmp = abyss->routes;
+	while (tmp != NULL)
+	{
+		if (tmp->head != NULL)
+		{
+			free_inner(tmp->head);
+			tmp->head = NULL;
+			tmp->tail = NULL;
+		}
+		tmp1 = tmp;
+		free(tmp1);
+		tmp = tmp->next;
+	}
+	abyss->routes = NULL;
+}
+
+int		is_in_list(t_temp *best, int num)
+{
+	while (best != NULL)
+	{
+		if (best->room_index == num)
+		{
+			return (1);
+		}
+		best = best->next;
+	}
+	return (0);
+}
+
+void	remove_odd_routes(t_a *abyss)
+{
+	t_way *tmp;
+
+	tmp = abyss->routes;
+	while (tmp != NULL)
+	{
+		if (!is_in_list(abyss->best, tmp->num))
+		{
+			free_inner(tmp->head);
+			tmp->head = NULL;
+			tmp->tail = NULL;
+			free_outer(tmp, abyss);
+		}
+		tmp = tmp->next;
 	}
 }
 
@@ -1096,6 +1214,20 @@ int		main(void)
 	}
 
 	set_search(abyss.routes, &abyss);
+	remove_odd_routes(&abyss);
+
+	lal = abyss.routes;
+	while (lal != NULL)
+	{
+		huy = lal->head;
+		while (huy != NULL)
+		{
+			printf("|%d| - ", huy->room_index);
+			huy = huy->next;
+		}
+		printf("\n");
+		lal = lal->next;
+	}
 
 	c_destruct(&abyss);
 	return (0);
