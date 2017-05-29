@@ -17,10 +17,12 @@ void	c_destruct(t_a *abyss)
 	if (abyss->matrix != NULL)
 	{
 		free_2d_array((void **)abyss->matrix, abyss->node_count);
+		abyss->matrix = NULL;
 	}
 	if (abyss->names != NULL)
 	{
 		free_2d_array((void **)abyss->names, abyss->node_count);
+		abyss->names = NULL;
 	}
 	if (abyss->head != NULL)
 	{
@@ -680,7 +682,8 @@ void	add_to_temp_list(t_a *abyss, int index)
 	node = create_temp_node(index);
 	if (node == NULL)
 	{
-		//freeshit (visit, matrix, names, temp_routes)
+		c_destruct(abyss);
+		write(1, "Not enough memory\n", 18);
 		exit(-5);
 	}
 	node->next = abyss->test_route;
@@ -730,7 +733,8 @@ void	new_route_emerges(t_a *abyss, int size)
 		tmp1 = new_room();
 		if (tmp1 == NULL)
 		{
-			//freeshit (visit, matrix, names, temp_routes, routes, rooms)
+			c_destruct(abyss);
+			write(1, "Not enough memory\n", 18);
 			exit(-5);
 		}
 		if (abyss->routes->head == NULL)
@@ -758,7 +762,8 @@ void	create_a_route(t_a *abyss, int size)
 	node = create_way_node(size);
 	if (node == NULL)
 	{
-		//freeshit (visit, matrix, names, temp_routes, routes)
+		c_destruct(abyss);
+		write(1, "Not enough memory\n", 18);
 		exit(-5);
 	}
 	if (abyss->routes == NULL)
@@ -812,6 +817,7 @@ void	finding_path(t_a *abyss)
 	if (abyss->visit == NULL)
 	{
 		c_destruct(abyss);
+		write(1, "Not enough memory\n", 18);
 		exit(-5);
 	}
 	for (int i = 0; i < abyss->node_count; i++)
@@ -943,6 +949,7 @@ void	route_to_tempset(int num, t_a *abyss)
 	if (node == NULL)
 	{
 		c_destruct(abyss);
+		write(1, "Not enough memory\n", 18);
 		exit(-6);
 	}
 	node->next = abyss->test_route;
@@ -1116,6 +1123,14 @@ void	remove_odd_routes(t_a *abyss)
 	}
 }
 
+void	its_alive(t_a *abyss)
+{
+	t_route *tmp;
+
+	tmp = abyss->routes->tail->prev;
+	printf("%d\n", tmp->room_index);
+}
+
 int		main(void)
 {
 	char *line;
@@ -1229,6 +1244,9 @@ int		main(void)
 		lal = lal->next;
 	}
 
+	its_alive(&abyss);
+
 	c_destruct(&abyss);
+
 	return (0);
 }

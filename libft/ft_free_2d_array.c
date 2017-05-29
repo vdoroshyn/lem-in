@@ -24,5 +24,4 @@ void	free_2d_array(void **arr, int elem_count)
 		i++;
 	}
 	free(arr);
-	arr = NULL;
 }
