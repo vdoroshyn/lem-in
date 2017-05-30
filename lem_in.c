@@ -435,6 +435,7 @@ int		**matrix_init(t_a *abyss)
 				free(abyss->matrix[i]);
 			}
 			free(abyss->matrix);
+			abyss->matrix = NULL;
 			return (NULL);
 		}
 		i++;		
@@ -465,6 +466,7 @@ char	**names_init(t_a *abyss)
 				free(abyss->names[i]);
 			}
 			free(abyss->names);
+			abyss->names = NULL;
 			return (NULL);
 		}
 		temp = temp->next;
@@ -1123,12 +1125,17 @@ void	remove_odd_routes(t_a *abyss)
 	}
 }
 
-void	its_alive(t_a *abyss)
+void	moving_ants(t_a *abyss)
 {
-	t_route *tmp;
+	int i;
 
-	tmp = abyss->routes->tail->prev;
-	printf("%d\n", tmp->room_index);
+	i = 0;
+	abyss->flag = push_from_start(abyss);//check how many routes to use;
+	while (abyss->flag != 0)
+	{
+		push_ants();
+		abyss->flag = push_from_start(abyss);
+	}
 }
 
 int		main(void)
@@ -1148,6 +1155,8 @@ int		main(void)
 	abyss.visit = NULL;
 	abyss.best = NULL;
 	abyss.priority = 0;
+	abyss.matrix = NULL;
+	abyss.names = NULL;
 	ft_read_ants(&line, &abyss);
 	if (!(abyss.flag = ft_read_rooms(&line, &abyss)))
 	{
@@ -1244,7 +1253,7 @@ int		main(void)
 		lal = lal->next;
 	}
 
-	its_alive(&abyss);
+	//moving_ants(&abyss);
 
 	c_destruct(&abyss);
 
