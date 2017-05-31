@@ -44,6 +44,7 @@ typedef struct		s_ways
 	t_route			*tail;
 	int				size;
 	int				num;
+	int				stop;
 	struct s_ways	*prev;
 	struct s_ways	*next;
 }					t_way;

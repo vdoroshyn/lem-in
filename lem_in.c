@@ -1125,17 +1125,88 @@ void	remove_odd_routes(t_a *abyss)
 	}
 }
 
-void	moving_ants(t_a *abyss)
+void	add_route_priority(t_way *head)
 {
+	int len_0;
 	int i;
 
+	len_0 = head->size;
 	i = 0;
-	abyss->flag = push_from_start(abyss);//check how many routes to use;
+	while (head != NULL)
+	{
+		head->stop = (head->size - len_0) + (i - 1);
+		++i;
+		head = head->next;
+	}
+}
+
+int		push_ants(t_a *abyss, t_route *tail)
+{
+	int flag;
+
+	flag = 0;
+	tail->ant_num = 0;
+	while (tail->prev != NULL)
+	{
+		if (tail->prev->ant_num != 0)
+		{
+			tail->ant_num = tail->prev->ant_num;
+			printf("L%d-%s ", tail->ant_num, abyss->names[tail->room_index]);
+			tail->prev->ant_num = 0;
+			++flag;
+		}
+		tail = tail->prev;
+	}
+	return (flag);
+}
+
+int		push_to_start(t_a *abyss, int *i, t_way *tmp)
+{
+	int flag;
+
+	flag = 0;
+	if (*i <= abyss->ants && *i > tmp->stop) //&& tmp->head->ant_num == 0
+	{
+		tmp->head->ant_num = *i;
+		*i += 1;
+		++flag;
+	}
+	return (flag);
+}
+
+void	moving_ants(t_a *abyss)
+{
+	t_way *tmp;
+	int i;
+
+	add_route_priority(abyss->routes);
+	i = 1;
+	abyss->flag = 1;
 	while (abyss->flag != 0)
 	{
-		push_ants();
-		abyss->flag = push_from_start(abyss);
+		abyss->flag = 0;
+		tmp = abyss->routes;
+		while (tmp != NULL)
+		{
+			abyss->flag += push_ants(abyss, tmp->tail);
+			abyss->flag += push_to_start(abyss, &i, tmp);
+			tmp = tmp->next;
+		}
+		printf("\n");
 	}
+	// t_route *huy;
+	// tmp = abyss->routes;
+	// while (tmp != NULL)
+	// {
+	// 	huy = tmp->head;
+	// 	while (huy != NULL)
+	// 	{
+	// 		printf("|%d| - ", huy->ant_num);
+	// 		huy = huy->next;
+	// 	}
+	// 	printf("\n");
+	// 	tmp = tmp->next;
+	// }
 }
 
 int		main(void)
@@ -1253,7 +1324,7 @@ int		main(void)
 		lal = lal->next;
 	}
 
-	//moving_ants(&abyss);
+	moving_ants(&abyss);
 
 	c_destruct(&abyss);
 
