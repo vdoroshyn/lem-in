@@ -12,28 +12,9 @@
 
 #include "lem_in.h"
 
-int		ft_ants_atoi(const char *str)
+static void		ants_num_validate(char **line)
 {
-	int res;
-	int i;
-
-	i = 0;
-	res = 0;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		if (res > 214748364 || (res == 214748364 && str[i] > '6'))
-		{
-			return (0);
-		}
-		res = res * 10 + (str[i] - '0');
-		i++;
-	}
-	return (res);
-}
-
-void	ants_num_validate(char **line)
-{
-	int i;
+	int			i;
 
 	i = 0;
 	while ((*line)[i] != '\0')
@@ -56,16 +37,19 @@ void	ants_num_validate(char **line)
 	}
 }
 
-void	ant_commands(char **line, t_a *abyss)
+static void		get_ants(char **line, t_a *abyss)
 {
-	ft_putendl(*line);
-	ft_strdel(line);
+	ants_num_validate(line);
+	abyss->ants = ft_ants_atoi(*line);
+	ft_putendlstrdel(line);
+}
+
+static void		ant_commands(char **line, t_a *abyss)
+{
+	ft_putendlstrdel(line);
 	if (get_next_line(0, line) > 0)
 	{
-		ants_num_validate(line);
-		abyss->ants = ft_ants_atoi(*line);
-		ft_putendl(*line);
-		ft_strdel(line);
+		get_ants(line, abyss);
 		return ;
 	}
 	else
@@ -75,36 +59,36 @@ void	ant_commands(char **line, t_a *abyss)
 	}
 }
 
-void	ft_read_ants(char **line, t_a *abyss)
+static void		error_ant_start(char **line)
 {
-	int i;
+	if ((ft_strcmp("##start", *line) == 0)
+		|| (ft_strcmp("##end", *line) == 0))
+	{
+		ft_strdel(line);
+		write(1, "ERROR\n", 6);
+		exit(-1);
+	}
+}
+
+void			ft_read_ants(char **line, t_a *abyss)
+{
+	int			i;
 
 	i = 0;
 	while (get_next_line(0, line) > 0)
 	{
 		i++;
-		if ((ft_strcmp("##start", *line) == 0) || (ft_strcmp("##end", *line) == 0))
-		{
-			ft_strdel(line);
-			write(1, "ERROR\n", 6);
-			exit(-1);
-		}
-		else if (vd_strlen(*line) > 3 && (*line)[0] == '#' && (*line)[1] == '#')
+		error_ant_start(line);
+		if (vd_strlen(*line) > 3 && (*line)[0] == '#' && (*line)[1] == '#')
 		{
 			ant_commands(line, abyss);
 			break ;
 		}
 		else if ((*line)[0] == '#')
-		{
-			ft_putendl(*line);
-			ft_strdel(line);
-		}
+			ft_putendlstrdel(line);
 		else
 		{
-			ants_num_validate(line);
-			abyss->ants = ft_ants_atoi(*line);
-			ft_putendl(*line);
-			ft_strdel(line);
+			get_ants(line, abyss);
 			break ;
 		}
 	}

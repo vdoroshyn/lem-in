@@ -19,6 +19,9 @@ HEADER = lem_in.h
 OBJECTS = lem_in.o \
 			aug_lib.o \
 			validate_ants.o \
+			norme1.o \
+			moving_ants.o \
+			sorting_routes.o \
 
 .PHONY : clean all fclean re
 
@@ -48,3 +51,12 @@ aug_lib.o : aug_lib.c $(HEADER)
 
 validate_ants.o : validate_ants.c $(HEADER)
 	$(CC) $(CFLAGS) -c validate_ants.c $(HEADER)
+
+moving_ants.o : moving_ants.c $(HEADER)
+	$(CC) $(CFLAGS) -c moving_ants.c $(HEADER)
+
+sorting_routes.o : sorting_routes.c $(HEADER)
+	$(CC) $(CFLAGS) -c sorting_routes.c $(HEADER)
+
+norme1.o : norme1.c $(HEADER)
+	$(CC) $(CFLAGS) -c norme1.c $(HEADER)

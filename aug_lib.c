@@ -44,7 +44,7 @@ char		*ft_strdup_space(const char *s1)
 	return (s2);
 }
 
-int		ft_isprint_nospace(char c)
+int			ft_isprint_nospace(char c)
 {
 	if (c > 32 && c <= 126 && c != 45)
 	{
@@ -53,9 +53,9 @@ int		ft_isprint_nospace(char c)
 	return (0);
 }
 
-int		vd_strlen(const char *s)
+int			vd_strlen(const char *s)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (s[i] != '\0')

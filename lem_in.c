@@ -838,69 +838,69 @@ void	finding_path(t_a *abyss)
 	printf("\n");//TODO
 }
 
-void	number_nodes(t_a *abyss)
-{
-	t_way *tmp;
-	int i;
+// void	number_nodes(t_a *abyss)
+// {
+// 	t_way *tmp;
+// 	int i;
 
-	i = 0;
-	tmp = abyss->routes;
-	while (tmp != NULL)
-	{
-		tmp->num = i; 
-		i++;
-		tmp = tmp->next;
-	}
-}
+// 	i = 0;
+// 	tmp = abyss->routes;
+// 	while (tmp != NULL)
+// 	{
+// 		tmp->num = i; 
+// 		i++;
+// 		tmp = tmp->next;
+// 	}
+// }
 
-void	sorting_routes(t_a *abyss)
-{
-	t_way *temp;
-	t_way *inner;
-	int flag;
-	int swap;
+// void	sorting_routes(t_a *abyss)
+// {
+// 	t_way *temp;
+// 	t_way *inner;
+// 	int flag;
+// 	int swap;
 
-	while (1)
-	{
-		swap = 0;
-		inner = abyss->routes;
-		while (inner != NULL && inner->next != NULL)
-		{
-			flag = 0;
-			if (inner->size > inner->next->size)
-			{
-				swap += 1;
-				if (inner->prev == NULL)
-				{
-					abyss->routes = inner->next;
-				}
-				if (inner->next->next != NULL)
-				{
-					inner->next->next->prev = inner;
-				}
-				temp = inner->next->next;
-				inner->next->next = inner->next->prev;
-				inner->next->prev = inner->prev;
-				if (inner->prev != NULL)
-				{
-					inner->prev->next = inner->next;
-				}
-				inner->prev = inner->next;
-				inner->next = temp;
-				flag = 1;
-			}
-			if (flag == 0)
-			{
-				inner = inner->next;
-			}
-		}
-		if (swap == 0)
-		{
-			break ;
-		}
-	}
-	number_nodes(abyss);
-}
+// 	while (1)
+// 	{
+// 		swap = 0;
+// 		inner = abyss->routes;
+// 		while (inner != NULL && inner->next != NULL)
+// 		{
+// 			flag = 0;
+// 			if (inner->size > inner->next->size)
+// 			{
+// 				swap += 1;
+// 				if (inner->prev == NULL)
+// 				{
+// 					abyss->routes = inner->next;
+// 				}
+// 				if (inner->next->next != NULL)
+// 				{
+// 					inner->next->next->prev = inner;
+// 				}
+// 				temp = inner->next->next;
+// 				inner->next->next = inner->next->prev;
+// 				inner->next->prev = inner->prev;
+// 				if (inner->prev != NULL)
+// 				{
+// 					inner->prev->next = inner->next;
+// 				}
+// 				inner->prev = inner->next;
+// 				inner->next = temp;
+// 				flag = 1;
+// 			}
+// 			if (flag == 0)
+// 			{
+// 				inner = inner->next;
+// 			}
+// 		}
+// 		if (swap == 0)
+// 		{
+// 			break ;
+// 		}
+// 	}
+// 	number_nodes(abyss);
+// }
 
 int		ft_isunique(t_route *tmp, t_a *abyss)
 {
@@ -1123,139 +1123,6 @@ void	remove_odd_routes(t_a *abyss)
 		}
 		tmp = tmp->next;
 	}
-}
-
-void	add_route_priority(t_way *head)
-{
-	int len_0;
-	int i;
-
-	len_0 = head->size;
-	i = 0;
-	while (head != NULL)
-	{
-		head->stop = (head->size - len_0) + (i - 1);
-		printf("%d\n", head->stop);//TODO
-		++i;
-		head = head->next;
-	}
-}
-
-int		push_ants(t_a *abyss, t_route *tail)
-{
-	int flag;
-
-	flag = 0;
-	tail->ant_num = 0;
-	while (tail->prev->prev != NULL)
-	{
-		if (tail->prev->ant_num != 0)
-		{
-			tail->ant_num = tail->prev->ant_num;
-			if (abyss->len == 0)
-			{
-				write(1, "L", 1);
-				abyss->len = 1;
-			}
-			else
-			{
-				write(1, " L", 2);
-			}
-			ft_putnbr(tail->ant_num);
-			write(1, "-", 1);
-			ft_putstr(abyss->names[tail->room_index]);
-			tail->prev->ant_num = 0;
-			++flag;
-		}
-		tail = tail->prev;
-	}
-	return (flag);
-}
-
-int		push_new_ants(t_a *abyss, t_route *head)
-{
-	int flag;
-
-	flag = 0;
-	if (head->ant_num != 0)
-	{
-		head->next->ant_num = head->ant_num;
-		if (abyss->len == 0)
-		{
-			write(1, "L", 1);
-			abyss->len = 1;
-		}
-		else
-		{
-			write(1, " L", 2);
-		}
-		ft_putnbr(head->ant_num);
-		write(1, "-", 1);
-		ft_putstr(abyss->names[head->next->room_index]);
-		head->ant_num = 0;
-		++flag;
-	}
-	return (flag);
-}
-
-int		push_to_start(t_a *abyss, int *i, t_way *tmp)
-{
-	int flag;
-
-	flag = 0;
-	if (*i <= abyss->ants && *i >= tmp->stop)
-	{
-		tmp->head->ant_num = *i;
-		*i += 1;
-		++flag;
-	}
-	return (flag);
-}
-
-void	moving_ants(t_a *abyss)
-{
-	t_way *tmp;
-	int i;
-
-	add_route_priority(abyss->routes);
-	i = 1;
-	abyss->flag = 1;
-	abyss->len = 0;
-	while (abyss->flag != 0)
-	{
-		abyss->flag = 0;
-		tmp = abyss->routes;
-		while (tmp != NULL)
-		{
-			abyss->flag += push_ants(abyss, tmp->tail);
-			tmp = tmp->next;
-		}
-		tmp = abyss->routes;
-		while (tmp != NULL)
-		{
-			abyss->flag += push_new_ants(abyss, tmp->head);
-			abyss->flag += push_to_start(abyss, &i, tmp);
-			tmp = tmp->next;
-		}
-		if (abyss->flag != 0)
-		{
-			write(1, "\n", 1);
-		}
-		abyss->len = 0;
-	}
-	// t_route *huy;
-	// tmp = abyss->routes;
-	// while (tmp != NULL)
-	// {
-	// 	huy = tmp->head;
-	// 	while (huy != NULL)
-	// 	{
-	// 		printf("|%d| - ", huy->ant_num);
-	// 		huy = huy->next;
-	// 	}
-	// 	printf("\n");
-	// 	tmp = tmp->next;
-	// }
 }
 
 int		main(void)

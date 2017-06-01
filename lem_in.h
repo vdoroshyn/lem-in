@@ -73,9 +73,15 @@ char	*ft_strdup_space(const char *s1);
 int		ft_isprint_nospace(char c);
 int		vd_strlen(const char *s);
 
+void	ft_putendlstrdel(char **line);
 //ants validation
 void	ft_read_ants(char **line, t_a *abyss);
-
+int		ft_ants_atoi(const char *str);
+//moving ants
+void	moving_ants(t_a *abyss);
+void	add_route_priority(t_way *head);
+//sorting routes
+void			sorting_routes(t_a *abyss);
 //destruct
 void	destroy_outer(t_a *abyss);
 void	free_best(t_a *abyss);
