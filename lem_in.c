@@ -1135,6 +1135,7 @@ void	add_route_priority(t_way *head)
 	while (head != NULL)
 	{
 		head->stop = (head->size - len_0) + (i - 1);
+		printf("%d\n", head->stop);//TODO
 		++i;
 		head = head->next;
 	}
@@ -1146,16 +1147,53 @@ int		push_ants(t_a *abyss, t_route *tail)
 
 	flag = 0;
 	tail->ant_num = 0;
-	while (tail->prev != NULL)
+	while (tail->prev->prev != NULL)
 	{
 		if (tail->prev->ant_num != 0)
 		{
 			tail->ant_num = tail->prev->ant_num;
-			printf("L%d-%s ", tail->ant_num, abyss->names[tail->room_index]);
+			if (abyss->len == 0)
+			{
+				write(1, "L", 1);
+				abyss->len = 1;
+			}
+			else
+			{
+				write(1, " L", 2);
+			}
+			ft_putnbr(tail->ant_num);
+			write(1, "-", 1);
+			ft_putstr(abyss->names[tail->room_index]);
 			tail->prev->ant_num = 0;
 			++flag;
 		}
 		tail = tail->prev;
+	}
+	return (flag);
+}
+
+int		push_new_ants(t_a *abyss, t_route *head)
+{
+	int flag;
+
+	flag = 0;
+	if (head->ant_num != 0)
+	{
+		head->next->ant_num = head->ant_num;
+		if (abyss->len == 0)
+		{
+			write(1, "L", 1);
+			abyss->len = 1;
+		}
+		else
+		{
+			write(1, " L", 2);
+		}
+		ft_putnbr(head->ant_num);
+		write(1, "-", 1);
+		ft_putstr(abyss->names[head->next->room_index]);
+		head->ant_num = 0;
+		++flag;
 	}
 	return (flag);
 }
@@ -1165,7 +1203,7 @@ int		push_to_start(t_a *abyss, int *i, t_way *tmp)
 	int flag;
 
 	flag = 0;
-	if (*i <= abyss->ants && *i > tmp->stop) //&& tmp->head->ant_num == 0
+	if (*i <= abyss->ants && *i >= tmp->stop)
 	{
 		tmp->head->ant_num = *i;
 		*i += 1;
@@ -1182,6 +1220,7 @@ void	moving_ants(t_a *abyss)
 	add_route_priority(abyss->routes);
 	i = 1;
 	abyss->flag = 1;
+	abyss->len = 0;
 	while (abyss->flag != 0)
 	{
 		abyss->flag = 0;
@@ -1189,10 +1228,20 @@ void	moving_ants(t_a *abyss)
 		while (tmp != NULL)
 		{
 			abyss->flag += push_ants(abyss, tmp->tail);
+			tmp = tmp->next;
+		}
+		tmp = abyss->routes;
+		while (tmp != NULL)
+		{
+			abyss->flag += push_new_ants(abyss, tmp->head);
 			abyss->flag += push_to_start(abyss, &i, tmp);
 			tmp = tmp->next;
 		}
-		printf("\n");
+		if (abyss->flag != 0)
+		{
+			write(1, "\n", 1);
+		}
+		abyss->len = 0;
 	}
 	// t_route *huy;
 	// tmp = abyss->routes;

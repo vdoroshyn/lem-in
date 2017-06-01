@@ -1,0 +1,12 @@
+4
+##start
+a 1 1
+b-c 2 2
+b 3 3
+c 4 4
+##end
+a-b 5 5
+a-b
+b-b-c
+a-c
+a-b-c
