@@ -82,11 +82,27 @@ void	moving_ants(t_a *abyss);
 void	add_route_priority(t_way *head);
 //sorting routes
 void			sorting_routes(t_a *abyss);
+//set_search
+void	set_search(t_way *head, t_a *abyss);
+void		route_to_tempset(int num, t_a *abyss);
+//creating and adding
+t_route		*new_room(void);
+t_way	*create_way_node(int size);
+t_temp	*create_temp_node(int index);
+void	add_to_temp_list(t_a *abyss, int index);
+void	new_route_emerges(t_a *abyss, int size);
+void		create_a_route(t_a *abyss, int size);
+//finding path
+void	finding_path(t_a *abyss);
 //destruct
+void	remove_odd_routes(t_a *abyss);
 void	destroy_outer(t_a *abyss);
+void	free_inner(t_route *head);
+
 void	free_best(t_a *abyss);
 void	free_list(t_a *abyss);
 void	free_end_start(t_lst **head);
+void	free_temp_node(t_a *abyss);
 void	free_temp_list(t_a *abyss);
 void	c_destruct(t_a *abyss);
 #endif

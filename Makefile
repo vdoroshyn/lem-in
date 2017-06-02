@@ -22,6 +22,11 @@ OBJECTS = lem_in.o \
 			norme1.o \
 			moving_ants.o \
 			sorting_routes.o \
+			set_search.o \
+			free1.o \
+			free2.o \
+			finding_path.o \
+			creating_nodes.o \
 
 .PHONY : clean all fclean re
 
@@ -55,8 +60,23 @@ validate_ants.o : validate_ants.c $(HEADER)
 moving_ants.o : moving_ants.c $(HEADER)
 	$(CC) $(CFLAGS) -c moving_ants.c $(HEADER)
 
+finding_path.o : finding_path.c $(HEADER)
+	$(CC) $(CFLAGS) -c finding_path.c $(HEADER)
+
 sorting_routes.o : sorting_routes.c $(HEADER)
 	$(CC) $(CFLAGS) -c sorting_routes.c $(HEADER)
+
+set_search.o : set_search.c $(HEADER)
+	$(CC) $(CFLAGS) -c set_search.c $(HEADER)
+
+creating_nodes.o : creating_nodes.c $(HEADER)
+	$(CC) $(CFLAGS) -c creating_nodes.c $(HEADER)
+
+free1.o : free1.c $(HEADER)
+	$(CC) $(CFLAGS) -c free1.c $(HEADER)
+
+free2.o : free2.c $(HEADER)
+	$(CC) $(CFLAGS) -c free2.c $(HEADER)
 
 norme1.o : norme1.c $(HEADER)
 	$(CC) $(CFLAGS) -c norme1.c $(HEADER)

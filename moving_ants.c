@@ -72,7 +72,7 @@ static int		push_to_start(t_a *abyss, int *i, t_way *tmp)
 	int			flag;
 
 	flag = 0;
-	if (*i <= abyss->ants && *i >= tmp->stop)
+	if (*i <= abyss->ants && (abyss->ants - *i + 1) >= tmp->stop)
 	{
 		tmp->head->ant_num = *i;
 		*i += 1;
