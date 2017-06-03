@@ -55,12 +55,14 @@ OBJECTS = get_next_line.o \
 			ft_strcpy.o \
 			ft_strdel.o \
 			ft_strdup.o \
+			ft_strdup_delim.o \
 			ft_strequ.o \
 			ft_striter.o \
 			ft_striteri.o \
 			ft_strjoin.o \
 			ft_strlcat.o \
 			ft_strlen.o \
+			vd_strlen_delim.o \
 			ft_strmap.o \
 			ft_strmapi.o \
 			ft_strncat.o \
@@ -231,6 +233,9 @@ ft_strdel.o : ft_strdel.c
 ft_strdup.o : ft_strdup.c
 	@$(CC) $(CFLAGS) -c ft_strdup.c
 
+ft_strdup_delim.o : ft_strdup_delim.c
+	@$(CC) $(CFLAGS) -c ft_strdup_delim.c
+
 ft_strequ.o : ft_strequ.c
 	@$(CC) $(CFLAGS) -c ft_strequ.c
 
@@ -248,6 +253,9 @@ ft_strlcat.o : ft_strlcat.c
 
 ft_strlen.o : ft_strlen.c
 	@$(CC) $(CFLAGS) -c ft_strlen.c
+
+vd_strlen_delim.o : vd_strlen_delim.c
+	@$(CC) $(CFLAGS) -c vd_strlen_delim.c
 
 ft_strmap.o : ft_strmap.c
 	@$(CC) $(CFLAGS) -c ft_strmap.c

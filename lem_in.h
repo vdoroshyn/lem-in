@@ -19,8 +19,8 @@
 typedef struct		s_lst
 {
 	char			*content;
-	int 			x;
-	int 			y;
+	int				x;
+	int				y;
 	struct s_lst	*next;
 }					t_lst;
 
@@ -51,58 +51,99 @@ typedef struct		s_ways
 
 typedef struct		s_ants
 {
-	int ants;
-	int len;
-	int node_count;
-	int flag;
-	float priority;
-	int **matrix;
-	char **names;
-	int *visit;
-	t_way *routes;
-	t_temp *test_route;
-	t_temp *best;
-	t_lst *head;
-	t_lst *start;
-	t_lst *end;
-}	t_a;
+	int				ants;
+	int				len;
+	int				node_count;
+	int				flag;
+	float			priority;
+	int				**matrix;
+	char			**names;
+	int				*visit;
+	t_way			*routes;
+	t_temp			*test_route;
+	t_temp			*best;
+	t_lst			*head;
+	t_lst			*start;
+	t_lst			*end;
+}					t_a;
 
-//augumented libft functions
-int		ft_strlen_space(const char *s);
-char	*ft_strdup_space(const char *s1);
-int		ft_isprint_nospace(char c);
-int		vd_strlen(const char *s);
+/*
+**augumented libft functions
+*/
+int					ft_isprint_nospace(char c);
+int					vd_strlen(const char *s);
+void				ft_putendlstrdel(char **line);
+/*
+**ants validation
+*/
+void				ft_read_ants(char **line, t_a *abyss);
+int					ft_ants_atoi(const char *str);
+/*
+**read rooms
+*/
+int					room_validate(char *line);
+void				room_to_list(char **line, t_a *abyss);
+void				coords_to_node(char **line, int *x, int *y, t_a *abyss);
+int					ft_read_rooms(char **line, t_a *abyss);
+void				check_end(char **line, t_a *abyss);
+void				check_start(char **line, t_a *abyss);
+int					other_commands(char **line, t_a *abyss);
+void				destuctexit(t_a *abyss);
+/*
+**coords and storage
+*/
+void				start_end_to_list(t_a *abyss);
+void				validate_room_names_coords(t_a *abyss, char **line);
+int					**matrix_init(t_a *abyss);
+char				**names_init(t_a *abyss);
+/*
+**read links
+*/
+int					ft_read_links(char **line, t_a *abyss);
+int					link_validate(char *line, t_a *abyss);
+/*
+**moving ants
+*/
+void				moving_ants(t_a *abyss);
+void				add_route_priority(t_way *head);
+/*
+**sorting routes
+*/
+void				sorting_routes(t_a *abyss);
+/*
+**set_search
+*/
+void				set_search(t_way *head, t_a *abyss);
+void				route_to_tempset(int num, t_a *abyss);
+/*
+**creating and adding
+*/
+t_route				*new_room(void);
+t_way				*create_way_node(int size);
+t_temp				*create_temp_node(int index);
+void				add_to_temp_list(t_a *abyss, int index);
+void				new_route_emerges(t_a *abyss, int size);
+void				create_a_route(t_a *abyss, int size);
+/*
+**finding path
+*/
+void				finding_path(t_a *abyss);
+/*
+**destruct
+*/
+void				c_destruct(t_a *abyss);
+void				remove_odd_routes(t_a *abyss);
+void				destroy_outer(t_a *abyss);
+void				free_inner(t_route *head);
+void				free_best(t_a *abyss);
+void				free_list(t_a *abyss);
+void				free_end_start(t_lst **head);
+void				free_temp_node(t_a *abyss);
+void				free_temp_list(t_a *abyss);
+void				c_destruct(t_a *abyss);
+/*
+**construct
+*/
+void				c_construct(t_a *abyss, char **line);
 
-void	ft_putendlstrdel(char **line);
-//ants validation
-void	ft_read_ants(char **line, t_a *abyss);
-int		ft_ants_atoi(const char *str);
-//moving ants
-void	moving_ants(t_a *abyss);
-void	add_route_priority(t_way *head);
-//sorting routes
-void			sorting_routes(t_a *abyss);
-//set_search
-void	set_search(t_way *head, t_a *abyss);
-void		route_to_tempset(int num, t_a *abyss);
-//creating and adding
-t_route		*new_room(void);
-t_way	*create_way_node(int size);
-t_temp	*create_temp_node(int index);
-void	add_to_temp_list(t_a *abyss, int index);
-void	new_route_emerges(t_a *abyss, int size);
-void		create_a_route(t_a *abyss, int size);
-//finding path
-void	finding_path(t_a *abyss);
-//destruct
-void	remove_odd_routes(t_a *abyss);
-void	destroy_outer(t_a *abyss);
-void	free_inner(t_route *head);
-
-void	free_best(t_a *abyss);
-void	free_list(t_a *abyss);
-void	free_end_start(t_lst **head);
-void	free_temp_node(t_a *abyss);
-void	free_temp_list(t_a *abyss);
-void	c_destruct(t_a *abyss);
 #endif

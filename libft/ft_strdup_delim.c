@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aug_lib.c                                          :+:      :+:    :+:   */
+/*   ft_strdup_delim.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vdoroshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/04/27 17:06:10 by vdoroshy          #+#    #+#             */
-/*   Updated: 2017/04/27 17:06:23 by vdoroshy         ###   ########.fr       */
+/*   Created: 2017/06/03 14:13:49 by vdoroshy          #+#    #+#             */
+/*   Updated: 2017/06/03 14:13:55 by vdoroshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem_in.h"
+#include "libft.h"
 
-int			ft_isprint_nospace(char c)
+char		*ft_strdup_delim(const char *s1, char c)
 {
-	if (c > 32 && c <= 126 && c != 45)
-	{
-		return (1);
-	}
-	return (0);
-}
-
-int			vd_strlen(const char *s)
-{
+	char	*s2;
 	int		i;
 
-	i = 0;
-	while (s[i] != '\0')
+	s2 = (char *)malloc(vd_strlen_delim(s1, c) * (sizeof(char) + 1));
+	if (s2 == NULL)
 	{
+		return (NULL);
+	}
+	i = 0;
+	while (s1[i] != c)
+	{
+		s2[i] = s1[i];
 		i++;
 	}
-	return (i);
+	s2[i] = '\0';
+	return (s2);
 }

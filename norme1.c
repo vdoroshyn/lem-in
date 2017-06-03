@@ -92,3 +92,14 @@ void		route_to_tempset(int num, t_a *abyss)
 	node->next = abyss->test_route;
 	abyss->test_route = node;
 }
+
+/*
+**read_rooms
+*/
+
+void		destuctexit(t_a *abyss)
+{
+	c_destruct(abyss);
+	write(1, "ERROR\n", 6);
+	exit(-2);
+}
